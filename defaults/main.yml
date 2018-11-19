@@ -1,2 +1,23 @@
 ---
-# defaults file for chris1984.downstream-fog-testing
+hammer_user:
+hammer_password:
+hostgroup_id:
+location_id:
+org_id:
+cr_id:
+cp_id:
+ptable_id:
+medium_id:
+os_id:
+image_name:
+test_pr:
+fog_version:
+fogpatch_url:
+revert_vm:
+update_foreman:
+rhv_username:
+rhv_password:
+rhv_url:
+rhv_ca:
+rhv_vmname:
+rhv_snapshotid:
