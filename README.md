@@ -2,6 +2,10 @@
 
 Ansible role to do regression testing of fog-vsphere against Foreman on oVirt
 
+## Build status
+
+[![Build Status](https://travis-ci.org/chris1984/downstream-fog-testing.svg?branch=master)](https://travis-ci.org/chris1984/downstream-fog-testing)
+
 ## Requirements
 
 * Python >= 2.6
