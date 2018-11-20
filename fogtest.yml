@@ -4,6 +4,7 @@
   become: true
   remote_user: root
   become_method: enable
+  serial: 1
 
   roles:
     - chris1984.downstream_fog_testing
