@@ -12,7 +12,7 @@
   - name: Start VM
     ovirt_vms:
       state: started
-      name: "{{ rhv_vmname }}"
+      name: "{{ inventory_hostname }}"
 
   - name: Put Foreman SELinux into permissive
     selinux:
@@ -67,14 +67,14 @@
     yum:
        name: '*'
        state: latest
-    when: update_foreman
+    when: update_satellite
 
   - name: Run upgrade hook since Katello/Foreman upgraded
     command: foreman-installer --upgrade -v -s --disable-system-checks
     args:
       chdir: /root
       creates: /root/fog-testing/upgrade
-    when: update_foreman
+    when: update_satellite
     register: installer_run
 
   - name: Generate new API cache data
@@ -232,7 +232,7 @@
 
   - name: Revert VM back to "Ready" snapshot
     ovirt_snapshots:
-      vm_name: "{{ rhv_vmname }}"
+      vm_name: "{{ inventory_hostname }}"
       state: revert
       snapshot_id: "{{ rhv_snapshotid }}"
     delegate_to: localhost
@@ -241,4 +241,4 @@
   - name: Stop VM
     ovirt_vms:
       state: stopped
-      name: "{{ rhv_vmname }}"
+      name: "{{ inventory_hostname }}"

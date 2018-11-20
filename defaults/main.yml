@@ -14,10 +14,9 @@ test_pr:
 fog_version:
 fogpatch_url:
 revert_vm:
-update_foreman:
+update_satellite:
 rhv_username:
 rhv_password:
 rhv_url:
 rhv_ca:
-rhv_vmname:
 rhv_snapshotid:
