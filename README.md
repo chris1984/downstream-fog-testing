@@ -1,38 +1,61 @@
-Role Name
-=========
+# Fog-testing
 
-A brief description of the role goes here.
+Ansible role to do regression testing of fog-vsphere against Foreman on oVirt
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Python >= 2.6
+* ovirt-engine-sdk-python >= 4.2.4
+* Ansible 2.7
 
-Role Variables
---------------
+## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+* Variables are all in role/defaults/main.yml
 
-Dependencies
-------------
+```yaml
+---
+hammer_user:
+hammer_password:
+hostgroup_id:
+location_id:
+org_id:
+cr_id:
+cp_id:
+ptable_id:
+medium_id:
+os_id:
+image_name:
+test_pr:
+fog_version:
+fogpatch_url:
+revert_vm:
+update_foreman:
+rhv_username:
+rhv_password:
+rhv_url:
+rhv_ca:
+rhv_vmname:
+rhv_snapshotid:
+```
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## Example Playbook
 
-Example Playbook
-----------------
+```yaml
+---
+- name: Start fog-vsphere regression testing
+  hosts: all
+  become: true
+  remote_user: root
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+  roles:
+    - chris1984.fog_downstream_testing
+```
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+### License
 
-License
--------
+MIT
 
-BSD
+### Author Information
 
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+* Chris Roberts - chrobert@redhat.com  - https://www.linkedin.com/in/croberts84/
+* Work at Redhat on the Foreman/Katello projects and also maintain fog-vsphere.
