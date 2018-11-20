@@ -48,7 +48,7 @@ rhv_snapshotid:
   remote_user: root
 
   roles:
-    - chris1984.fog_downstream_testing
+    - chris1984.downstream_fog_testing
 ```
 
 ### License

@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - chris1984.downstream-fog-testing
+    - chris1984.downstream_fog_testing
