@@ -1,18 +1,17 @@
 ---
 # 567 seconds from vm creation to reboot for PXE/Bootdisk/Image
 
-  - name: Create RHV Auth token
-    ovirt_auth:
-      url: "{{ rhv_url }}"
-      username: "{{ rhv_username }}"
-      password: "{{ rhv_password }}"
-      ca_file: "{{ rhv_ca }}"
-    no_log: true
-
-  - name: Start VM
+  - name: Start VM if powered off
     ovirt_vms:
-      state: started
+      state: running
       name: "{{ inventory_hostname }}"
+      cluster: "{{ rhv_cluster }}"
+      auth:
+        username: "{{ rhv_username }}"
+        password: "{{ rhv_password }}"
+        url: "{{ rhv_url }}"
+        insecure: true
+    delegate_to: localhost
 
   - name: Put Foreman SELinux into permissive
     selinux:
@@ -230,15 +229,39 @@
       - test14.toledo.satellite.lab.eng.rdu2.redhat.com
       - test15.toledo.satellite.lab.eng.rdu2.redhat.com
 
-  - name: Revert VM back to "Ready" snapshot
-    ovirt_snapshots:
-      vm_name: "{{ inventory_hostname }}"
-      state: revert
-      snapshot_id: "{{ rhv_snapshotid }}"
-    delegate_to: localhost
-    when: revert_vm
-
-  - name: Stop VM
+  - name: Stop VM to restore snapshot
     ovirt_vms:
       state: stopped
       name: "{{ inventory_hostname }}"
+      cluster: "{{ rhv_cluster }}"
+      auth:
+        username: "{{ rhv_username }}"
+        password: "{{ rhv_password }}"
+        url: "{{ rhv_url }}"
+        insecure: true
+    delegate_to: localhost
+
+  - name: Restore VM snapshot back to install
+    ovirt_snapshots:
+      state: restore
+      vm_name: "{{ inventory_hostname }}"
+      snapshot_id: "{{ vmsnapshot_id }}"
+      auth:
+        username: "{{ rhv_username }}"
+        password: "{{ rhv_password }}"
+        url: "{{ rhv_url }}"
+        insecure: true
+    delegate_to: localhost
+
+  # snapshot turns vm back on, so we have to turn it off again
+  - name: Powerdown VM to to prevent DHCP server conflicts
+    ovirt_vms:
+      state: stopped
+      name: "{{ inventory_hostname }}"
+      cluster: "{{ rhv_cluster }}"
+      auth:
+        username: "{{ rhv_username }}"
+        password: "{{ rhv_password }}"
+        url: "{{ rhv_url }}"
+        insecure: true
+    delegate_to: localhost
