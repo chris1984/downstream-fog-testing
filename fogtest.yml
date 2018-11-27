@@ -4,6 +4,7 @@
   become: true
   remote_user: root
   become_method: enable
+  gather_facts: no
   serial: 1
 
   roles:
