@@ -1,6 +1,7 @@
 ---
 hammer_user:
 hammer_password:
+hammer_version:
 hostgroup_id:
 location_id:
 org_id:
