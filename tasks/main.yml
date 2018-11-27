@@ -67,6 +67,7 @@
     yum:
        name: '*'
        state: latest
+       update_cache: yes
     when: update_satellite
 
   - name: Run upgrade hook since Katello/Foreman upgraded
