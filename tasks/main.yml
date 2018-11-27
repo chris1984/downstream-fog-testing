@@ -28,7 +28,7 @@
     patch:
       src: /root/hammer.patch
       remote_src: yes
-      dest: /opt/theforeman/tfm/root/usr/share/gems/gems/hammer_cli_foreman-0.16.pre.develop/lib/hammer_cli_foreman/hosts/common_update_options.rb
+      dest: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ hammer_version }}/lib/hammer_cli_foreman/hosts/common_update_options.rb
       strip: 1
 
   - name: Downloading fog-vsphere patch for testing
