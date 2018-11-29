@@ -11,6 +11,7 @@ location_id:
 medium_id:
 org_id:
 os_id:
+override_fog:
 ptable_id:
 revert_vm:
 rhv_ca:
@@ -20,6 +21,7 @@ rhv_snapshotid:
 rhv_url:
 rhv_username:
 sat_domain:
+test_fog_version:
 test_pr:
 update_satellite:
 vm_timeout: 567

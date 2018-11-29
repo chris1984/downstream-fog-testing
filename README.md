@@ -30,15 +30,17 @@ location_id: Location ID
 medium_id: Installation medium ID
 org_id: Organization ID
 os_id: Operating system ID
+override_fog: Put true if you want to test a specfic version of fog-vsphere than on the machine
 ptable_id: Partition Table ID
 revert_vm: Put true if you want to revert the VM snapshot after testing
 rhv_ca: Path to the RHV CA
 rhv_cluster: Cluster name in RHV
 rhv_password: Password for RHV
 rhv_snapshotid: Snapshot ID for VM
-rhv_url: URL to RHV 
+rhv_url: URL to RHV
 rhv_username: Username for RHV
 sat_domain: Domain setup in Satellite to append to short name host during creation
+test_fog_version: Version of fog-vsphere you want to test and download. IE 2.5.0
 test_pr: Put true if running in PR test mode.
 update_satellite: Put true if you want to perform a yum update * and then an installer run with the --upgrade flag
 vm_timeout: 567 # Configurable timeout for waiting before starting more VM creation tasks
