@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Fog-testing &#8212; fog-vsphere Downstream Testing 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="fog-testing">
+<span id="fog-testing"></span><h1>Fog-testing<a class="headerlink" href="#fog-testing" title="Permalink to this headline">¶</a></h1>
+<p>Ansible role to do regression testing of fog-vsphere against Red Hat Satellite on oVirt</p>
+<div class="section" id="build-status">
+<span id="build-status"></span><h2>Build status<a class="headerlink" href="#build-status" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://travis-ci.org/chris1984/downstream-fog-testing"><img alt="Build Status" src="https://travis-ci.org/chris1984/downstream-fog-testing.svg?branch=master" /></a></p>
+</div>
+<div class="section" id="requirements">
+<span id="requirements"></span><h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Python &gt;= 2.6</li>
+<li>ovirt-engine-sdk-python &gt;= 4.2.4</li>
+<li>Ansible 2.7</li>
+</ul>
+</div>
+<div class="section" id="role-variables">
+<span id="role-variables"></span><h2>Role Variables<a class="headerlink" href="#role-variables" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Variables are all in defaults/main.yml</li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">cp_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Compute Profile ID</span>
+<span class="l l-Scalar l-Scalar-Plain">cr_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Compute Resource ID</span>
+<span class="l l-Scalar l-Scalar-Plain">fog_version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Fog version that you are testing with on Red Hat Satellite</span>
+<span class="l l-Scalar l-Scalar-Plain">fogpatch_url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">URL to GitHub Patch to download and test</span>
+<span class="l l-Scalar l-Scalar-Plain">hammer_password</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Password for hammer</span>
+<span class="l l-Scalar l-Scalar-Plain">hammer_user</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Username for hammer</span>
+<span class="l l-Scalar l-Scalar-Plain">hammer_version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Version of hammer on the Satellite</span>
+<span class="l l-Scalar l-Scalar-Plain">hostgroup_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Hostgroup ID</span>
+<span class="l l-Scalar l-Scalar-Plain">location_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Location ID</span>
+<span class="l l-Scalar l-Scalar-Plain">medium_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Installation medium ID</span>
+<span class="l l-Scalar l-Scalar-Plain">org_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Organization ID</span>
+<span class="l l-Scalar l-Scalar-Plain">os_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Operating system ID</span>
+<span class="l l-Scalar l-Scalar-Plain">override_fog</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Put true if you want to test a specfic version of fog-vsphere than on the machine</span>
+<span class="l l-Scalar l-Scalar-Plain">ptable_id</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Partition Table ID</span>
+<span class="l l-Scalar l-Scalar-Plain">revert_vm</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Put true if you want to revert the VM snapshot after testing</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_ca</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Path to the RHV CA</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_cluster</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Cluster name in RHV</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_password</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Password for RHV</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_snapshotid</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Snapshot ID for VM</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_url</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">URL to RHV</span>
+<span class="l l-Scalar l-Scalar-Plain">rhv_username</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Username for RHV</span>
+<span class="l l-Scalar l-Scalar-Plain">sat_domain</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Domain setup in Satellite to append to short name host during creation</span>
+<span class="l l-Scalar l-Scalar-Plain">test_fog_version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Version of fog-vsphere you want to test and download. IE 2.5.0</span>
+<span class="l l-Scalar l-Scalar-Plain">test_pr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Put true if running in PR test mode.</span>
+<span class="l l-Scalar l-Scalar-Plain">update_satellite</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Put true if you want to perform a yum update * and then an installer run with the --upgrade flag</span>
+<span class="l l-Scalar l-Scalar-Plain">vm_timeout</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">567</span> <span class="c1"># Configurable timeout for waiting before starting more VM creation tasks</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-playbook">
+<span id="example-playbook"></span><h2>Example Playbook<a class="headerlink" href="#example-playbook" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">Start fog-vsphere Red Hat Satellite regression testing</span>
+  <span class="l l-Scalar l-Scalar-Plain">hosts</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">all</span>
+  <span class="l l-Scalar l-Scalar-Plain">become</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">remote_user</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">root</span>
+  <span class="l l-Scalar l-Scalar-Plain">become_method</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">enable</span>
+  <span class="l l-Scalar l-Scalar-Plain">gather_facts</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no</span>
+  <span class="l l-Scalar l-Scalar-Plain">serial</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+
+  <span class="l l-Scalar l-Scalar-Plain">roles</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">chris1984.downstream_fog_testing</span>
+</pre></div>
+</div>
+<div class="section" id="license">
+<span id="license"></span><h3>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h3>
+<p>MIT</p>
+</div>
+<div class="section" id="author-information">
+<span id="author-information"></span><h3>Author Information<a class="headerlink" href="#author-information" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Chris Roberts - chrobert&#64;redhat.com  - https://www.linkedin.com/in/croberts84/</li>
+<li>Work at Redhat on the Foreman/Katello projects and also maintain fog-vsphere.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">fog-vsphere Downstream Testing</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Chris Roberts.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/README.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
