@@ -1,6 +1,6 @@
 # Fog-testing
 
-Ansible role to do regression testing of fog-vsphere against Foreman on oVirt
+Ansible role to do regression testing of fog-vsphere against Red Hat Satellite on oVirt
 
 ## Build status
 
@@ -18,38 +18,43 @@ Ansible role to do regression testing of fog-vsphere against Foreman on oVirt
 
 ```yaml
 ---
-hammer_user:
-hammer_password:
-hostgroup_id:
-location_id:
-org_id:
-cr_id:
-cp_id:
-ptable_id:
-medium_id:
-os_id:
-image_name:
-test_pr:
-fog_version:
-fogpatch_url:
-revert_vm:
-update_foreman:
-rhv_username:
-rhv_password:
-rhv_url:
-rhv_ca:
-rhv_vmname:
-rhv_snapshotid:
+cp_id: Compute Profile ID
+cr_id: Compute Resource ID
+fog_version: Fog version that you are testing with on Red Hat Satellite
+fogpatch_url: URL to GitHub Patch to download and test
+hammer_password: Password for hammer
+hammer_user: Username for hammer
+hammer_version: Version of hammer on the Satellite
+hostgroup_id: Hostgroup ID
+location_id: Location ID
+medium_id: Installation medium ID
+org_id: Organization ID
+os_id: Operating system ID
+ptable_id: Partition Table ID
+revert_vm: Put true if you want to revert the VM snapshot after testing
+rhv_ca: Path to the RHV CA
+rhv_cluster: Cluster name in RHV
+rhv_password: Password for RHV
+rhv_snapshotid: Snapshot ID for VM
+rhv_url: URL to RHV 
+rhv_username: Username for RHV
+sat_domain: Domain setup in Satellite to append to short name host during creation
+test_pr: Put true if running in PR test mode.
+update_satellite: Put true if you want to perform a yum update * and then an installer run with the --upgrade flag
+vm_timeout: 567 # Configurable timeout for waiting before starting more VM creation tasks
 ```
 
 ## Example Playbook
 
 ```yaml
 ---
-- name: Start fog-vsphere regression testing
+- name: Start fog-vsphere Red Hat Satellite regression testing
   hosts: all
   become: true
   remote_user: root
+  become_method: enable
+  gather_facts: no
+  serial: 1
 
   roles:
     - chris1984.downstream_fog_testing
