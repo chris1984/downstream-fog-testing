@@ -59,10 +59,10 @@
 
   - name: Extract fog-vsphere archive into gem directory
     unarchive:
-    src: /root/v{{ test_fog_version }}.tar.gz
-    dest: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ fog_version }}
-    extra_opts:
-      - --overwrite
+      src: /root/v{{ test_fog_version }}.tar.gz
+      dest: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ fog_version }}
+      extra_opts:
+        - --overwrite
     when: override_fog
 
   - name: Create fog-testing directory in root
