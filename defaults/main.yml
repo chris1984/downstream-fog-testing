@@ -21,3 +21,6 @@ rhv_password:
 rhv_url:
 rhv_ca:
 rhv_snapshotid:
+rhv_cluster:
+sat_domain:
+vm_timeout: 567
