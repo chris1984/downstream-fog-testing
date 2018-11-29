@@ -14,7 +14,7 @@ Ansible role to do regression testing of fog-vsphere against Red Hat Satellite o
 
 ## Role Variables
 
-* Variables are all in role/defaults/main.yml
+* Variables are all in defaults/main.yml
 
 ```yaml
 ---
