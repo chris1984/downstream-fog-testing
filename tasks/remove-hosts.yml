@@ -1,0 +1,19 @@
+---
+  - name: Delete VMS before reverting snapshot to prevent name taken error
+    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host delete --name "{{ item }}"
+    args:
+      chdir: /root
+      creates: /root/fog-testing/remove_vms
+    with_items:
+    - test1.{{ sat_domain }}
+    - test2.{{ sat_domain }}
+    - test3.{{ sat_domain }}
+    - test4.{{ sat_domain }}
+    - test5.{{ sat_domain }}
+    - test6.{{ sat_domain }}
+    - test7.{{ sat_domain }}
+    - test8.{{ sat_domain }}
+    - test9.{{ sat_domain }}
+    - test10.{{ sat_domain }}
+    - test11.{{ sat_domain }}
+...
