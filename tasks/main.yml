@@ -1,23 +1,23 @@
 ---
   - name: Create RHV Auth token
     ovirt_auth:
+      ca_file: "{{ rhv_ca }}"
+      password: "{{ rhv_password }}"
       url: "{{ rhv_url }}"
       username: "{{ rhv_username }}"
-      password: "{{ rhv_password }}"
-      ca_file: "{{ rhv_ca }}"
     no_log: true
     delegate_to: localhost
 
   - name: Start VM for testing
     ovirt_vms:
-      state: running
-      name: "{{ inventory_hostname }}"
-      cluster: "{{ rhv_cluster }}"
       auth:
-        username: "{{ rhv_username }}"
-        password: "{{ rhv_password }}"
-        url: "{{ rhv_url }}"
         insecure: true
+        password: "{{ rhv_password }}"
+        username: "{{ rhv_username }}"
+        url: "{{ rhv_url }}"
+      cluster: "{{ rhv_cluster }}"
+      name: "{{ inventory_hostname }}"
+      state: running
     delegate_to: localhost
 
   - name: Put Foreman SELinux into permissive
@@ -32,9 +32,9 @@
 
   - name: Apply patch to hammer-cli-foreman
     patch:
-      src: /root/hammer.patch
-      remote_src: yes
       dest: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ hammer_version }}/lib/hammer_cli_foreman/hosts/common_update_options.rb
+      remote_src: yes
+      src: /root/hammer.patch
       strip: 1
 
   - name: Downloading fog-vsphere patch for testing
@@ -45,32 +45,32 @@
 
   - name: Appling /root/fog.patch to fog-vsphere for testing
     patch:
-      src: /root/fog.patch
-      remote_src: yes
-      strip: 1
       basedir: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ fog_version }}/
+      remote_src: yes
+      src: /root/fog.patch
+      strip: 1
     when: test_pr
 
   - name: Download requested version of fog-vsphere
     get_url:
       dest: /root/v{{ test_fog_version }}.tar.gz
-      url: https://github.com/fog/fog-vsphere/archive/v{{ test_fog_version }}.tar.gz
       force: yes
+      url: https://github.com/fog/fog-vsphere/archive/v{{ test_fog_version }}.tar.gz
     when: override_fog
 
   - name: Extract fog-vsphere archive into gem directory
     unarchive:
-      src: /root/v{{ test_fog_version }}.tar.gz
       dest: /opt/theforeman/tfm/root/usr/share/gems/gems/{{ fog_version }}
       extra_opts:
         - --overwrite
+      src: /root/v{{ test_fog_version }}.tar.gz
     when: override_fog
 
   - name: Create fog-testing directory in root
     file:
+      mode: 0755
       path: /root/fog-testing
       state: directory
-      mode: 0755
 
   - name: Restart Katello/Foreman services
     command: foreman-maintain service restart
@@ -132,20 +132,20 @@
 
   - name: Revert VM back to "Ready" snapshot
     ovirt_snapshots:
-      vm_name: "{{ inventory_hostname }}"
-      state: revert
       snapshot_id: "{{ rhv_snapshotid }}"
+      state: revert
+      vm_name: "{{ inventory_hostname }}"
     delegate_to: localhost
     when: revert_vm
 
   - name: Stop VM after snapshot restore
     ovirt_vms:
-      state: stopped
-      name: "{{ inventory_hostname }}"
-      cluster: "{{ rhv_cluster }}"
       auth:
-        username: "{{ rhv_username }}"
-        password: "{{ rhv_password }}"
-        url: "{{ rhv_url }}"
         insecure: true
+        password: "{{ rhv_password }}"
+        username: "{{ rhv_username }}"
+        url: "{{ rhv_url }}"
+      cluster: "{{ rhv_cluster }}"
+      name: "{{ inventory_hostname }}"
+      state: stopped
     delegate_to: localhost
