@@ -117,16 +117,17 @@
 
   - name: Start regression testing defined in create-hosts.yml
     block:
-      - include: create-hosts.yml
+      - include: tasks/create-hosts.yml
+        static: yes
     rescue:
       - debug:
            msg: An error occurred during the testing,rolling back to snapshot.
         when: is_debug is defined
-      - include: remove-hosts.yml
+      - include: tasks/remove-hosts.yml
         static: yes
 
   - name: Delete VMS before reverting snapshot to prevent name taken error
-    include: remove-hosts.yaml
+    include: tasks/remove-hosts.yaml
     static: yes
 
   - name: Revert VM back to "Ready" snapshot
