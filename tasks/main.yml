@@ -127,7 +127,7 @@
         static: yes
 
   - name: Delete VMS before reverting snapshot to prevent name taken error
-    include: tasks/remove-hosts.yaml
+    include: tasks/remove-hosts.yml
     static: yes
 
   - name: Revert VM back to "Ready" snapshot
