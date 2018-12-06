@@ -6,6 +6,7 @@
       password: "{{ rhv_password }}"
       ca_file: "{{ rhv_ca }}"
     no_log: true
+    delegate_to: localhost
 
   - name: Start VM for testing
     ovirt_vms:
@@ -114,113 +115,19 @@
     register: hping
     failed_when: hping.rc == 1
 
-  - name: PXE | Normal VM creation with single HDD on Local Datastore
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test1 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test1
-
-  - name: PXE | Normal VM creation with added HDD on Local Datastore
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test2 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --volume name=harddisk1,datastore=Local-Ironforge,size_gb=10,thin=true,eager_zero=false,mode=persistent --volume name=harddisk2,datastore=Local-Ironforge,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test2
-
-  - name: Sleep for {{ vm_timeout }} seconds while 2 VM builds complete
-    wait_for: timeout={{ vm_timeout }}
-    delegate_to: localhost
-
-  - name: PXE | Normal VM creation with single HDD on Storage Pod
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test3 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test3
-
-  - name: PXE | Normal VM creation with added HDD on Storage Pod
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test4 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent --volume name=harddisk2,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test4
-
-  - name: Sleep for {{ vm_timeout }} seconds while 2 VM builds complete
-    wait_for: timeout={{ vm_timeout }}
-    delegate_to: localhost
-
-  - name: Bootdisk | Normal VM creation with single HDD on Local Datastore
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test5 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --provision-method bootdisk --medium-id {{ medium_id }} --partition-table-id {{ ptable_id }}
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test5
-
-  - name: Bootdisk | Normal VM creation with added HDD on Local Datastore
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test6 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --provision-method bootdisk --medium-id {{ medium_id }} --partition-table-id {{ ptable_id }} --volume name=harddisk1,datastore=Local-Ironforge,size_gb=10,thin=true,eager_zero=false,mode=persistent --volume name=harddisk2,datastore=Local-Ironforge,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test6
-
-  - name: Sleep for {{ vm_timeout }} seconds while 2 VM builds complete
-    wait_for: timeout={{ vm_timeout }}
-    delegate_to: localhost
-
-  - name: Bootdisk | Normal VM creation with single HDD on Storage Pod
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test7 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --provision-method bootdisk --medium-id {{ medium_id }} --partition-table-id {{ ptable_id }} --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test7
-
-  - name: Bootdisk | Normal VM creation with added HDD on Storage Pod
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test8 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=1 --provision-method bootdisk --medium-id {{ medium_id }} --partition-table-id {{ ptable_id }} --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent --volume name=harddisk2,datastore=Local-Ironforge,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test8
-
-  - name: Sleep for {{ vm_timeout }} seconds while 2 VM builds complete
-    wait_for: timeout={{ vm_timeout }}
-    delegate_to: localhost
-
-  - name: Network | Normal VM creation with NIC in portgroup on Distributed Switch with VLAN
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test9 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=0,cluster=SysMgmt_vMotion,resource_pool=Resources --interface compute_type=VirtualVmxnet3,compute_network=VLAN-Test --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test9
-
-  - name: Sleep for 10 seconds while VM build completes
-    wait_for: timeout=10
-    delegate_to: localhost
-
-  - name: Network | Normal VM creation with NIC in portgroup on Distributed Switch
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test10 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=0,cluster=SysMgmt_vMotion,resource_pool=Resources --interface compute_type=VirtualVmxnet3,compute_network=CEE_VM_Network --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test10
-
-  - name: Sleep for 10 seconds while VM build completes
-    wait_for: timeout=10
-    delegate_to: localhost
-
-  - name: Network | Normal VM creation with additional NIC
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host create --name test11 --hostgroup-id {{ hostgroup_id }} --location-id {{ location_id }} --organization-id {{ org_id }} --compute-resource-id {{ cr_id }} --compute-profile-id {{ cp_id }} --compute-attributes start=0,cluster=SysMgmt_vMotion,resource_pool=Resources --interface compute_type=VirtualVmxnet3,compute_network=CEE_VM_Network,primary=true --interface compute_type=VirtualVmxnet3,compute_network=VLAN-Test,primary=false --volume name=harddisk1,storage_pod=Synology-Cluster,size_gb=10,thin=true,eager_zero=false,mode=persistent
-    args:
-      chdir: /root
-      creates: /root/fog-testing/test11
+  - name: Start regression testing defined in create-hosts.yml
+    block:
+      - include: create-hosts.yml
+    rescue:
+      - debug:
+           msg: An error occurred during the testing,rolling back to snapshot.
+        when: is_debug is defined
+      - include: remove-hosts.yml
+        static: yes
 
   - name: Delete VMS before reverting snapshot to prevent name taken error
-    command: hammer -u {{ hammer_user }} -p {{ hammer_password }} host delete --name "{{ item }}"
-    args:
-      chdir: /root
-      creates: /root/fog-testing/remove_vms
-    with_items:
-      - test1.{{ sat_domain }}
-      - test2.{{ sat_domain }}
-      - test3.{{ sat_domain }}
-      - test4.{{ sat_domain }}
-      - test5.{{ sat_domain }}
-      - test6.{{ sat_domain }}
-      - test7.{{ sat_domain }}
-      - test8.{{ sat_domain }}
-      - test9.{{ sat_domain }}
-      - test10.{{ sat_domain }}
-      - test11.{{ sat_domain }}
+    include: remove-hosts.yaml
+    static: yes
 
   - name: Revert VM back to "Ready" snapshot
     ovirt_snapshots:
