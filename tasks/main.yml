@@ -1,23 +1,14 @@
 ---
-  - name: Create RHV Auth token
-    ovirt_auth:
-      ca_file: "{{ rhv_ca }}"
-      password: "{{ rhv_password }}"
-      url: "{{ rhv_url }}"
-      username: "{{ rhv_username }}"
-    no_log: true
-    delegate_to: localhost
-
   - name: Start VM for testing
-    ovirt_vms:
-      auth:
-        insecure: true
-        password: "{{ rhv_password }}"
-        username: "{{ rhv_username }}"
-        url: "{{ rhv_url }}"
-      cluster: "{{ rhv_cluster }}"
-      name: "{{ inventory_hostname }}"
-      state: running
+    vmware_guest:
+      name: Toledo-Downstream
+      password: "{{ vmw_password }}"
+      username: "{{ vmw_username }}"
+      hostname: "{{ vmw_hostname }}"
+      cluster: "{{ vmw_cluster }}"
+      datacenter: "{{ vmw_datacenter }}"
+      state: poweredon
+      validate_certs: false
     delegate_to: localhost
 
   - name: Put Foreman SELinux into permissive
@@ -72,7 +63,7 @@
       path: /root/fog-testing
       state: directory
 
-  - name: Restart Katello/Foreman services
+  - name: Restart Satellite services
     command: foreman-maintain service restart
     args:
       chdir: /root
@@ -84,14 +75,14 @@
     wait_for: timeout=60
     delegate_to: localhost
 
-  - name: Upgrade Katello/Foreman to latest
+  - name: Upgrade Satellite to latest
     yum:
        name: '*'
        state: latest
        update_cache: yes
     when: update_satellite
 
-  - name: Run upgrade hook since Katello/Foreman has been upgraded
+  - name: Run upgrade hook since Satellite has been upgraded
     command: foreman-installer --upgrade -v -s --disable-system-checks
     args:
       chdir: /root
@@ -131,21 +122,26 @@
     static: yes
 
   - name: Revert VM back to "Ready" snapshot
-    ovirt_snapshots:
-      snapshot_id: "{{ rhv_snapshotid }}"
+    vmware_guest_snapshot:
+      hostname: "{{ vmw_hostname }}"
+      username: "{{ vmw_username }}"
+      password: "{{ vmw_password }}"
+      datacenter: "{{ vmw_datacenter }}"
+      folder: RH_Engineering\Toledo
+      name: Toledo-Downstream
       state: revert
-      vm_name: "{{ inventory_hostname }}"
-    delegate_to: localhost
+      snapshot_name: Current-Snap
     when: revert_vm
+    delegate_to: localhost
 
   - name: Stop VM after snapshot restore
-    ovirt_vms:
-      auth:
-        insecure: true
-        password: "{{ rhv_password }}"
-        username: "{{ rhv_username }}"
-        url: "{{ rhv_url }}"
-      cluster: "{{ rhv_cluster }}"
-      name: "{{ inventory_hostname }}"
-      state: stopped
+    vmware_guest:
+      hostname: "{{ vmw_hostname }}"
+      username: "{{ vmw_username }}"
+      password: "{{ vmw_password }}"
+      cluster: "{{ vmw_cluster }}"
+      datacenter: "{{ vmw_datacenter }}"
+      validate_certs: false
+      name: Toledo-Downstream
+      state: poweredoff
     delegate_to: localhost

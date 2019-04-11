@@ -1,6 +1,6 @@
 # Fog-testing
 
-Ansible role to do regression testing of fog-vsphere against Red Hat Satellite on oVirt
+Ansible role to do regression testing of fog-vsphere against Red Hat Satellite on VMware
 
 ## Build status
 
@@ -11,6 +11,7 @@ Ansible role to do regression testing of fog-vsphere against Red Hat Satellite o
 * Python >= 2.6
 * ovirt-engine-sdk-python >= 4.2.4
 * Ansible 2.7
+* PyVmomi
 
 ## Role Variables
 
@@ -33,12 +34,10 @@ os_id: Operating system ID
 override_fog: Put true if you want to test a specfic version of fog-vsphere than on the machine
 ptable_id: Partition Table ID
 revert_vm: Put true if you want to revert the VM snapshot after testing
-rhv_ca: Path to the RHV CA
-rhv_cluster: Cluster name in RHV
-rhv_password: Password for RHV
-rhv_snapshotid: Snapshot ID for VM
-rhv_url: URL to RHV
-rhv_username: Username for RHV
+vmw_cluster: Cluster name in VMware
+vmw_password: Password for VMware
+vmw_hostname: URL to VMware
+vmw_username: Username for VMware
 sat_domain: Domain setup in Satellite to append to short name host during creation
 test_fog_version: Version of fog-vsphere you want to test and download. IE 2.5.0
 test_pr: Put true if running in PR test mode.
